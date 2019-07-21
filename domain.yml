@@ -1,0 +1,18 @@
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - ask_time
+
+actions:
+  - utter_greet
+  - utter_goodbye
+  - action_tell_time
+
+templates:
+  utter_greet:
+  - text: "Hi there."
+
+  utter_goodbye:
+  - text: "Bye"
