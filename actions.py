@@ -14,7 +14,11 @@ from rasa_sdk.executor import CollectingDispatcher
 
 from datetime import datetime
 import pytz
-import subprocess
+
+from wolframclient.evaluation import WolframLanguageSession
+from wolframclient.language import wl, wlexpr
+
+wl_session = WolframLanguageSession()
 
 
 class ActionHelloWorld(Action):
@@ -42,9 +46,6 @@ class ActionTellTime(Action):
         utc_now = pytz.utc.localize(datetime.utcnow())
         loc_now = utc_now.astimezone(pytz.timezone("Europe/Berlin"))
 
-        wcode = 'Last@Interpreter["City"]["Berlin"]["Country"]["Continent"]'
-        wlang = subprocess.Popen(['wolframscript', '-code', wcode], stdout=subprocess.PIPE)
-        (out, err) = wlang.communicate()
-        out = out.decode('ascii')
+        continent = wl_session.evaluate(wlexpr('Last@Interpreter["City"]["Berlin"]["Country"]["Continent"]'))
 
-        dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in Germany ({out}).")
+        dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in Germany ({continent}).")
