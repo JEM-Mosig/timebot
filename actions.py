@@ -14,18 +14,18 @@ from rasa_sdk.executor import CollectingDispatcher
 
 from datetime import datetime
 import pytz
+import subprocess
 
 
 class ActionHelloWorld(Action):
 
     def name(self) -> Text:
         return "action_hello_world"
-    
+
     def run(self,
             dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        
         dispatcher.utter_message("Hello World!")
         return []
 
@@ -39,7 +39,12 @@ class ActionTellTime(Action):
             dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
         utc_now = pytz.utc.localize(datetime.utcnow())
         loc_now = utc_now.astimezone(pytz.timezone("Europe/Berlin"))
-        dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in Germany.")
+
+        wcode = 'Last@Interpreter["City"]["Berlin"]["Country"]["Continent"]'
+        wlang = subprocess.Popen(['wolframscript', '-code', wcode], stdout=subprocess.PIPE)
+        (out, err) = wlang.communicate()
+        out = out.decode('ascii')
+
+        dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in Germany ({out}).")
