@@ -35,6 +35,12 @@
 - hey there
 - hi
 
+## intent:thank
+- thanks
+- thank you
+- many thanks!
+- cheers
+
 ## intent:inform_city
 - I live in [Berlin](city)
 - I live in [San Francisco](city)

@@ -1,11 +1,18 @@
 ## happy path
 * greet
   - utter_greet
-* ask_time
   - action_tell_time
+* inform_city{"city": "San Francisco"}
+  - action_tell_time
+* thank
+  - utter_youarewelcome
+* bye
+  - utter_goodbye
 
 ## happy path 2
 * ask_time
+  - action_tell_time
+* inform_city{"city": "Stockholm"}
   - action_tell_time
 * goodbye
   - utter_goodbye
@@ -36,5 +43,11 @@
 ## happy path 5
 * inform_city{"city": "Dunedin"}
   - action_tell_time
+* thank
+  - utter_youarewelcome
+* inform_city{"city": "Dunedin"}
+  - action_tell_time
+* thank
+  - utter_youarewelcome
 * goodbye
   - utter_goodbye

@@ -4,6 +4,7 @@ actions:
 - action_tell_time
 - utter_goodbye
 - utter_greet
+- utter_youarewelcome
 entities:
 - city
 intents:
@@ -13,6 +14,7 @@ intents:
 - affirm
 - deny
 - ask_time
+- thank
 slots:
   city:
     initial_value: ''
@@ -22,3 +24,6 @@ templates:
   - text: Bye
   utter_greet:
   - text: Hi there.
+  utter_youarewelcome:
+  - text: No worries!
+  - text: My pleasure.

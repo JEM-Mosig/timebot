@@ -19,19 +19,6 @@ from wolframclient.language import wl, wlexpr
 wl_session = WolframLanguageSession()
 
 
-class ActionHelloWorld(Action):
-
-    def name(self) -> Text:
-        return "action_hello_world"
-
-    def run(self,
-            dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message("Hello World!")
-        return []
-
-
 class ActionTellTime(Action):
 
     def name(self) -> Text:
@@ -46,11 +33,27 @@ class ActionTellTime(Action):
         if city == "":
             city = "Berlin"
 
-        tz_spec = wl_session.evaluate(wlexpr('Last@Interpreter["City"]["' + city + '"]["TimeZone"]'))
+        wl_session.evaluate(wlexpr('city = Interpreter["City"]["' + city + '"]'))
+        tz_spec = wl_session.evaluate(wlexpr('Last@city["TimeZone"]'))
 
-        dispatcher.utter_message(f"Your tz_spec is '{tz_spec}'.")
+        #dispatcher.utter_message(f"Your tz_spec is '{tz_spec}'.")
 
         utc_now = pytz.utc.localize(datetime.utcnow())
         loc_now = utc_now.astimezone(pytz.timezone(tz_spec))
 
         dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in {city}.")
+
+        next_dst_shift = wl_session.evaluate(wlexpr(
+            """
+            ToString[
+                Round@UnitConvert[
+                    DateDifference[
+                        Now, 
+                        city["NextDSTShift"]],
+                        MixedUnit[{"Months", "Days", "Hours"}]
+                ]
+            ]
+            """
+        ))
+
+        dispatcher.utter_message(f"There, the next DST shift will occur in {next_dst_shift}.")
