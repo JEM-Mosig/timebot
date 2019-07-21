@@ -5,8 +5,6 @@
 # https://rasa.com/docs/rasa/core/actions/#custom-actions/
 
 
-# This is a simple example for a custom action which utters "Hello World!"
-
 from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
@@ -43,9 +41,16 @@ class ActionTellTime(Action):
             dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        city = tracker.slots["city"]
+        if city == "":
+            city = "Berlin"
+
+        tz_spec = wl_session.evaluate(wlexpr('Last@Interpreter["City"]["' + city + '"]["TimeZone"]'))
+
+        dispatcher.utter_message(f"Your tz_spec is '{tz_spec}'.")
+
         utc_now = pytz.utc.localize(datetime.utcnow())
-        loc_now = utc_now.astimezone(pytz.timezone("Europe/Berlin"))
+        loc_now = utc_now.astimezone(pytz.timezone(tz_spec))
 
-        continent = wl_session.evaluate(wlexpr('Last@Interpreter["City"]["Berlin"]["Country"]["Continent"]'))
-
-        dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in Germany ({continent}).")
+        dispatcher.utter_message(f"It is {loc_now.strftime('%H:%M')} in {city}.")

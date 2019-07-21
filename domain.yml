@@ -1,18 +1,24 @@
-intents:
-  - greet
-  - goodbye
-  - affirm
-  - deny
-  - ask_time
-
+%YAML 1.1
+---
 actions:
-  - utter_greet
-  - utter_goodbye
-  - action_tell_time
-
+- action_tell_time
+- utter_goodbye
+- utter_greet
+entities:
+- city
+intents:
+- inform_city
+- greet
+- goodbye
+- affirm
+- deny
+- ask_time
+slots:
+  city:
+    initial_value: ''
+    type: text
 templates:
-  utter_greet:
-  - text: "Hi there."
-
   utter_goodbye:
-  - text: "Bye"
+  - text: Bye
+  utter_greet:
+  - text: Hi there.
